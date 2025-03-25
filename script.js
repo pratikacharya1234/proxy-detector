@@ -64,4 +64,4 @@ function displayResult(result) {
     });
   }
   
-  hideLoader();
+hideLoader();
