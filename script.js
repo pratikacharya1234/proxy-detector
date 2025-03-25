@@ -8,11 +8,10 @@ checkButton.addEventListener('click', function() {
         alert('Please enter a number.');
         return;
     }
-    // just a demo
-    let isHumanWriting = Math.random() < 0.5; // Randomly decide for demo purposes
-        result.innerHTML = isHumanWriting ? 'This text is likely human writing.' : 'This text is likely AI writing.';
-        result.style.display = 'block';
-
-    
 });
 
+clearButton.addEventListener('click',function(){
+    document.getElementById('textarea').value="";
+    result.innerHTML="";
+    result.style.display = 'none';
+});
