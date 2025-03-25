@@ -2,8 +2,7 @@
 let checkButton = document.getElementById('checkBtn');
 let clearButton = document.getElementById('clearBtn');
 let result = document.getElementById('result');
-let loader = document.getElementById('loader'); // Assuming loader has an ID in HTML
-
+let loader = document.getElementById('loader'); 
 // Function to show loader
 function showLoader() {
     loader.style.display = 'block';
