@@ -15,3 +15,6 @@ clearButton.addEventListener('click',function(){
     result.innerHTML = ''; 
     result.style.display = 'none';
 })
+
+result.style.display = 'none'; // Hide the result initially
+result.innerHTML = ''; // Clear any previous result
