@@ -1,5 +1,6 @@
 let checkButton = document.getElementById('checkBtn');
 let clearButton = document.getElementById('clearBtn');
+let result = document.getElementById('result');
 
 
 //function for loader to show
@@ -45,11 +46,10 @@ clearButton.addEventListener('click',function(){
 
 //function to display the result
 function displayResult(result) {
-    const result = document.getElementById('result');
     result.innerHTML = '';
   
-    result.forEach(result => {
-        const { label } = result.result;
+    result.forEach(results => {
+        const { label } = results.results;
 
       
       const resultCard = document.createElement('div');
