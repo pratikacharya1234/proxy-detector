@@ -1,4 +1,3 @@
-# Import Flask and required modules
 from flask import Flask, request, jsonify
 
 # Initialize the Flask app
@@ -11,12 +10,10 @@ def detect_text():
     data = request.get_json()
     text = data.get('text', '')
 
-    # Placeholder for your AI detection logic
-    # Replace this with your actual model prediction
+    # Placeholder for  AI detection logic
     if text:
-        # Example: Simple dummy logic (replace with your model)
         result = "Human-written" if len(text.split()) > 10 else "AI-generated"
-        confidence = 0.75  # Dummy confidence score
+        confidence = 0.75  
     else:
         return jsonify({'error': 'No text provided'}), 400
 
