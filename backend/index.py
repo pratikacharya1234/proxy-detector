@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 # Define the detection route
-@app.route('/detect', methods=['POST'])
+@app.route('api/detect', methods=['POST'])
 def detect_text():
     # Get the text from the frontend request
     data = request.get_json()
