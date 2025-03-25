@@ -49,6 +49,8 @@ function displayResult(result) {
     result.innerHTML = '';
   
     result.forEach(result => {
+        const { label } = result.result;
+
       
       const resultCard = document.createElement('div');
       resultCard.classList.add('resultCard');
