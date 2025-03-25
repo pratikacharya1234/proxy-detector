@@ -49,7 +49,7 @@ function displayResult(result) {
     result.innerHTML = '';
   
     result.forEach(results => {
-        const { label } = results.results;
+      const { label } = results.results;
 
       
       const resultCard = document.createElement('div');
@@ -61,7 +61,6 @@ function displayResult(result) {
   
       resultCard.appendChild(resultCard);
       resultPredict.appendChild(resultPredict);
-
       resultCard.appendChild(resultCard);
     });
   }
