@@ -3,6 +3,7 @@ let checkButton = document.getElementById('checkBtn');
 let clearButton = document.getElementById('clearBtn');
 let result = document.getElementById('result');
 let loader = document.getElementById('loader'); 
+
 // Function to show loader
 function showLoader() {
     loader.style.display = 'block';
@@ -24,7 +25,7 @@ checkButton.addEventListener('click', function() {
         return;
     }
 
-    fetch('http://localhost:8000/detect', {  
+    fetch('http://localhost:5000/detect', {  // Updated to Flask port 5000
         method: 'POST',
         body: JSON.stringify({ text: input }),
         headers: { 'Content-Type': 'application/json; charset=UTF-8' }
@@ -72,4 +73,5 @@ function displayResult(data) {
     result.style.display = 'block';
 }
 
+// Hide loader on page load
 hideLoader();

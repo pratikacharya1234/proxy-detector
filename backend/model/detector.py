@@ -5,25 +5,33 @@ import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
 
 # Download NLTK data (run once)
-nltk.download('punkt', quiet=True)
+nltk.download('punkt_tab', quiet=True)  
 
 # Feature extraction function
 def extract_features(text):
     sentences = sent_tokenize(text)
     words = word_tokenize(text)
     return [
-        len(words),              
-        len(sentences),          
-        len(words) / max(len(sentences), 1) 
+        len(words),              # Word count
+        len(sentences),          # Sentence count
+        len(words) / max(len(sentences), 1)  # Avg sentence length
     ]
 
-# Training data (two samples)
+# Load text from file or use default
+def load_sample(file_path, default_text):
+    if os.path.exists(file_path):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return f.read().strip()
+    return default_text
+
+# Training data (load from files or use defaults)
 def get_training_data():
-    # Read file contents
-    with open('data/Human_written.txt', 'r', encoding='utf-8') as file:
-        human_sample = file.read()
-    with open('data/Ai_written.txt', 'r', encoding='utf-8') as file:
-        ai_sample = file.read()
+    human_file = 'backend/data/Human_written.txt'
+    ai_file = 'backend/data/Ai_written.txt'
+    
+
+    human_sample = load_sample(human_file)
+    ai_sample = load_sample(ai_file)
     
     X = [
         extract_features(human_sample),  # Human features
@@ -38,18 +46,24 @@ def train_model():
     model = LogisticRegression()
     model.fit(X, y)
     
-    # Save model to file
-    with open("backend/model/trained_model.pkl", "wb") as f:
+    # Ensure directory exists and save model
+    os.makedirs("backend/model", exist_ok=True)
+    model_path = "backend/model/trained_model.pkl"
+    with open(model_path, "wb") as f:
         pickle.dump(model, f)
     return model
 
-# Load model (train if not exists)
+# Load model (train if not exists or invalid)
 def load_model():
     model_path = "backend/model/trained_model.pkl"
-    if not os.path.exists(model_path):
+    if not os.path.exists(model_path) or os.path.getsize(model_path) == 0:
         return train_model()
-    with open(model_path, "rb") as f:
-        return pickle.load(f)
+    try:
+        with open(model_path, "rb") as f:
+            return pickle.load(f)
+    except (EOFError, pickle.UnpicklingError):
+        # If loading fails (e.g., corrupted file), retrain
+        return train_model()
 
 # Detect text (predict with model)
 def detect_text(model, text):

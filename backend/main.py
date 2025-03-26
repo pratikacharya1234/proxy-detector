@@ -1,45 +1,38 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # Add this import
 from model.detector import load_model, detect_text
 
-# Create FastAPI app
-app = FastAPI(title="Proxy Detector", description="AI Text Detector API", version="1.0")
-
-# Add CORS middleware to allow cross-origin requests
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
-)
+# Initialize Flask app
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes, all origins
 
 # Load the model when server starts
 model = load_model()
 
-# Define request data model
-class TextRequest(BaseModel):
-    text: str
-
-# Define API endpoints
-@app.get("/")
+# Root endpoint
+@app.route('/', methods=['GET'])
 def read_root():
-    return {"message": "AI Text Detector API is running"}
+    return jsonify({"message": "AI Text Detector is running"})
 
-@app.post("/detect")
-def detect(request: TextRequest):
-    # Check for empty input
-    if not request.text.strip():
-        raise HTTPException(status_code=400, detail="Text cannot be empty")
+# Detection endpoint
+@app.route('/detect', methods=['POST'])
+def detect():
+    # Get JSON data from request
+    data = request.get_json()
+    if not data or 'text' not in data or not data['text'].strip():
+        return jsonify({"error": "Text cannot be empty"}), 400
     
     try:
-        result = detect_text(model, request.text)
-        # Convert label to frontend-expected format
-        label = "human" if result["label"] == 0 else "ai"
-        return {
-            "result": label,              # Matches script.js 'data.result'
-            "confidence": float(result["confidence"])  # Matches script.js 'data.confidence'
-        }
+        # Predict with model
+        result = detect_text(model, data['text'])
+        # Format response for frontend
+        label = "Human" if result["label"] == 0 else "AI"
+        return jsonify({
+            "result": label,
+            "confidence": float(result["confidence"])
+        })
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
