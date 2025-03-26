@@ -1,34 +1,45 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from model.detector import load_model, detect_text
 
-# Initialize FastAPI app
-app = FastAPI(title="AI Text Detector")
+# Create FastAPI app
+app = FastAPI(title="Proxy Detector", description="AI Text Detector API", version="1.0")
 
-# Define request body structure
-class TextInput(BaseModel):
+# Add CORS middleware to allow cross-origin requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
+# Load the model when server starts
+model = load_model()
+
+# Define request data model
+class TextRequest(BaseModel):
     text: str
 
-# Root endpoint (optional)
+# Define API endpoints
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to AI Text Detector"}
+    return {"message": "AI Text Detector API is running"}
 
-# Detection endpoint
 @app.post("/detect")
-async def detect(input: TextInput):
-    # Validate input
-    if not input.text.strip():
+def detect(request: TextRequest):
+    # Check for empty input
+    if not request.text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
     
-    # Load model and predict
-    model = load_model()
-    prediction = detect_text(model, input.text)
-    
-    # Return result
-    return {
-        "result": "human" if prediction["label"] == 0 else "ai",
-        "confidence": float(prediction["confidence"])
-    }
-
-# Run with: uvicorn backend.main:app --reload
+    try:
+        result = detect_text(model, request.text)
+        # Convert label to frontend-expected format
+        label = "human" if result["label"] == 0 else "ai"
+        return {
+            "result": label,              # Matches script.js 'data.result'
+            "confidence": float(result["confidence"])  # Matches script.js 'data.confidence'
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
