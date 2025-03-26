@@ -24,7 +24,7 @@ checkButton.addEventListener('click', function() {
         return;
     }
 
-    fetch('http://localhost:8000/detect', {  // Updated port to 8000
+    fetch('http://localhost:8000/detect', {  
         method: 'POST',
         body: JSON.stringify({ text: input }),
         headers: { 'Content-Type': 'application/json; charset=UTF-8' }
