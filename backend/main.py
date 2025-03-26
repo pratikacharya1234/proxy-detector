@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # Add this import
+from flask_cors import CORS 
 from model.detector import load_model, detect_text
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes, all origins
+# Enable CORS for all routes, all origins
+CORS(app)  
 
 # Load the model when server starts
 model = load_model()

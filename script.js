@@ -25,7 +25,7 @@ checkButton.addEventListener('click', function() {
         return;
     }
 
-    fetch('http://localhost:5000/detect', {  // Updated to Flask port 5000
+    fetch('http://localhost:5000/detect', { 
         method: 'POST',
         body: JSON.stringify({ text: input }),
         headers: { 'Content-Type': 'application/json; charset=UTF-8' }
