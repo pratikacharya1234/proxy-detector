@@ -18,31 +18,27 @@ checkButton.addEventListener('click', function() {
     showLoader();
     let input = document.getElementById('textarea').value;
     
-    // Validate input
     if (input === '') {
         alert('Please enter some text.');
-        hideLoader(); 
+        hideLoader();
         return;
     }
 
-    // Fetch data from Flask API
-    fetch('http://localhost:5000/detect', {
+    fetch('http://localhost:8000/detect', {  // Updated port to 8000
         method: 'POST',
-        body: JSON.stringify({ text: input }), 
+        body: JSON.stringify({ text: input }),
         headers: { 'Content-Type': 'application/json; charset=UTF-8' }
     })
-    // Parse JSON response
-    .then(response => response.json()) 
+    .then(response => response.json())
     .then(data => {
-        // Pass Flask response to display function
-        displayResult(data); 
-        hideLoader();  
+        displayResult(data);
+        hideLoader();
     })
     .catch(error => {
         console.error('Error fetching data:', error);
         result.innerHTML = 'Error: Could not analyze text.';
-        result.style.display = 'block'; 
-        hideLoader(); 
+        result.style.display = 'block';
+        hideLoader();
     });
 });
 
