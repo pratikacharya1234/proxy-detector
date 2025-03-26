@@ -12,12 +12,12 @@ def extract_features(text):
     sentences = sent_tokenize(text)
     words = word_tokenize(text)
     return [
-        len(words),              # Word count
-        len(sentences),          # Sentence count
-        len(words) / max(len(sentences), 1)  # Avg sentence length
+        len(words),              
+        len(sentences),          
+        len(words) / max(len(sentences), 1) 
     ]
 
-# Training data (your two samples)
+# Training data (two samples)
 def get_training_data():
     # Read file contents
     with open('data/Human_written.txt', 'r', encoding='utf-8') as file:
